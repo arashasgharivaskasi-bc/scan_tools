@@ -98,6 +98,7 @@ class LaserScanMatcher
 
     // **** parameters
 
+    std::string laser_frame_;
     std::string base_frame_;
     std::string fixed_frame_;
     double cloud_range_min_;
