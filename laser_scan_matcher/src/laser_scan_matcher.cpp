@@ -138,6 +138,8 @@ LaserScanMatcher::~LaserScanMatcher()
 
 void LaserScanMatcher::initParams()
 {
+  if (!nh_private_.getParam ("laser_frame", laser_frame_))
+    laser_frame_ = "laser";
   if (!nh_private_.getParam ("base_frame", base_frame_))
     base_frame_ = "base_link";
   if (!nh_private_.getParam ("fixed_frame", fixed_frame_))
@@ -388,7 +390,7 @@ void LaserScanMatcher::cloudCallback (const PointCloudT::ConstPtr& cloud)
   if (!initialized_)
   {
     // cache the static tf from base to laser
-    if (!getBaseLaserTransform(cloud_header.frame_id))
+    if (!getBaseLaserTransform(laser_frame_))
     {
       ROS_WARN("Skipping scan");
       return;
@@ -413,7 +415,7 @@ void LaserScanMatcher::scanCallback (const sensor_msgs::LaserScan::ConstPtr& sca
     createCache(scan_msg);    // caches the sin and cos of all angles
 
     // cache the static transform between the base and laser
-    if (!getBaseLaserTransform(scan_msg->header.frame_id))
+    if (!getBaseLaserTransform(laser_frame_))
     {
       ROS_WARN("Skipping scan");
       return;
